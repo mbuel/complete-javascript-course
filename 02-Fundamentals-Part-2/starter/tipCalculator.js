@@ -15,6 +15,8 @@ const bill1 = () => {
     )} the total value ${total}`
   );
 };
+console.log('true');
+console.log("true");
 
 const bill = [
   {
@@ -171,3 +173,9 @@ bill1();
 bill2();
 bill3();
 bill4(bill);
+
+if (true) {
+
+} else {
+  
+}

@@ -1,5 +1,20 @@
 "use strict";
 
+const Person = (name, height, mass) => {
+  return {
+    name: name,
+    height: height,
+    mass: mass,
+    calcBMI: () => {
+      return this.mass / this.height ** 2;
+    },
+  };
+};
+
+let morris = Person('Morris Buel', 2, 220);
+
+console.log(morris.calcBMI());
+
 const mark = {
   firstName: "Mark",
   height: 1.69,
@@ -16,6 +31,12 @@ const john = {
   calcBMI: function () {
     return this.mass / this.height ** 2;
   },
+};
+
+const hello = () => {
+  let hello = 1;
+  if (true == false) {
+  }
 };
 
 const compareBMI = (person1, person2) => {
