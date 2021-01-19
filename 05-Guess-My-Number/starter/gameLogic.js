@@ -32,24 +32,23 @@ class Game {
 
   resetApplication() {
     this.godsNumber = Math.ceil(Math.random() * 20);
-    this.information.textContent = 'Start guessing...';
+    this.displayMessage('Start guessing...');
     this.guess.value = '';
-    this.information.textContent = 'Start guessing...';
     this.myNumber.textContent = '?';
     this.score = 20;
     this.scoreDom.textContent = this.score;
     this.bodyDOM.style.backgroundColor = '#222';
   }
 
+  displayMessage(message) {
+    this.information.textContent = message;
+  }
+
   handleGuess() {
     
     if (!this.guess.value) {
-      this.information.textContent = '🛑 invalid number entered for guess! 🛑';
+      this.displayMessage('🛑 invalid number entered for guess! 🛑');
       return;
-    }
-    if (Number(this.score) === 1) {
-      this.information.textContent = '🤯 LAST TRY! 🤯';
-      
     }
     if (
       this.score === 0 ||
@@ -57,10 +56,13 @@ class Game {
     ) {
       return;
     }
+    if (Number(this.score) === 1) {
+      this.displayMessage('🤯 LAST TRY! 🤯');
+    }
 
     if (Number(this.guess.value) === this.godsNumber) {
       this.bodyDOM.style.backgroundColor = '#60b347';
-      this.information.textContent = '🏆 CONGRATULATIONS! 🏆';
+      this.displayMessage('🏆 CONGRATULATIONS! 🏆');
       this.myNumber.textContent = this.godsNumber;
 
       if (this.score > Number(this.highScore.textContent)) {
@@ -68,17 +70,14 @@ class Game {
         localStorage.setItem(this.highScoreStorageKey, this.score.toString());
       }
       return;
-    } else if (this.guess.value > this.godsNumber) {
-      this.information.textContent = '📈 You guessed higher than my number ';
-
-    } else if (this.guess.value < this.godsNumber) {
-      this.information.textContent = '📉 You guessed lower than my number ';
-    }
+    } 
+    let messageToDisplay = (this.guess.value > this.godsNumber) ? '📈 You guessed higher than my number ' : '📉 You guessed lower than my number ';
+    this.displayMessage(messageToDisplay);
     this.score--;
     this.scoreDom.textContent = this.score;
 
     if (this.score === 0) {
-      this.information.textContent = '😵 GAME OVER! 😵';
+      this.displayMessage('😵 GAME OVER! 😵');
       this.bodyDOM.style.backgroundColor = '#be2222';
     }
   }
