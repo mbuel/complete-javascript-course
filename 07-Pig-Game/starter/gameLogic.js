@@ -13,14 +13,14 @@ class DiceGame {
 
   dice = document.querySelector('.dice');
   btnNew = document
-    .querySelector('.btn--new')
-    .addEventListener('click', this.init.bind(this));
+    .querySelector('.btn--new');
+    
   btnRoll = document
-    .querySelector('.btn--roll')
-    .addEventListener('click', this.roll.bind(this));
+    .querySelector('.btn--roll');
+    
   btnHold = document
-    .querySelector('.btn--hold')
-    .addEventListener('click', this.hold.bind(this));
+    .querySelector('.btn--hold');
+    
 
   /**
    * constructs game logic object
@@ -28,7 +28,9 @@ class DiceGame {
    */
   constructor(winningScore) {
     if (winningScore) this.winningScore = winningScore;
-
+    this.btnHold.addEventListener('click', this.hold.bind(this));
+    this.btnRoll.addEventListener('click', this.roll.bind(this));
+    this.btnNew.addEventListener('click', this.init.bind(this));
     this.init();
     this.togglePlayer = this.togglePlayer.bind(this);
     this.setActiveFrame = this.setActiveFrame.bind(this);
@@ -58,16 +60,21 @@ class DiceGame {
 
       this.activeFrame.classList.remove('player--active');
       this.activeFrame.classList.remove('player--winner');
+
       this.activeCurrentScoreDom.textContent = 0;
       this.activeTotalScoreDom.textContent = 0;
     }
 
+    this.dice.classList.remove('hidden');
+    this.btnHold.classList.remove('hidden');
+    this.btnRoll.classList.remove('hidden');
+    this.dice.classList.add('hidden');
     this.currentPlayer = 0; // Set back to Player 1
     this.setActiveFrame(this.currentPlayer);
 
     this.activeFrame.classList.toggle('player--active');
 
-    this.dice.classList.add('hidden');
+    
   }
   /**
    * toggles the active player
@@ -86,35 +93,38 @@ class DiceGame {
    * rolls the dice
    */
   roll() {
-    if (this.dice.classList.contains('hidden')) {
-      this.dice.classList.remove('hidden');
-    }
-
     if (this.activeFrame.classList.contains('player--winner')) return;
+    this.dice.classList.remove('hidden');
 
-    let currentRoll = Math.floor(Math.random() * 6 + 1);
-    this.dice.src = `dice-${currentRoll}.png`;
+    let currentRoll = 0;
 
-    if (currentRoll === 1) {
-      // skip turn
-      this.togglePlayer();
-      return;
-    }
+    this.dice.classList.toggle('dice--roll');
+    let rollingInterval = setInterval(() => {
+      currentRoll = Math.floor(Math.random() * 6 + 1);
+      this.dice.src = `dice-${currentRoll}.png`;
+    }, 50);
 
-    this.currentScore[this.currentPlayer] += currentRoll;
-    this.activeCurrentScoreDom.innerHTML = this.currentScore[
-      this.currentPlayer
-    ];
+    setTimeout(() => {
+      clearInterval(rollingInterval);
+      this.dice.classList.toggle('dice--roll');
+      if (currentRoll === 1) {
+        // skip turn
+        this.togglePlayer();
+        return;
+      }
+
+      this.currentScore[this.currentPlayer] += currentRoll;
+      this.activeCurrentScoreDom.innerHTML = this.currentScore[
+        this.currentPlayer
+      ];
+    }, 800);
   }
   // Save dice roll and toggle player
   /**
    * saves the current dice roll
    */
   hold() {
-    if (
-      (this.player1CurrentScore === 0 && this.player2CurrentScore === 0) ||
-      this.activeFrame.classList.contains('player--winner')
-    ) {
+    if (this.player1CurrentScore === 0 && this.player2CurrentScore === 0) {
       return;
     }
 
@@ -123,10 +133,15 @@ class DiceGame {
     ];
     this.activeTotalScoreDom.innerHTML = this.totalScore[this.currentPlayer];
 
+    // Set victory
     if (this.totalScore[this.currentPlayer] >= this.winningScore) {
       this.activeFrame.classList.add('player--winner');
       this.activeFrame.classList.remove('player--active');
       this.activePlayer.textContent = '🏆 WINNER!';
+
+      this.dice.classList.add('hidden');
+      this.btnHold.classList.add('hidden');
+      this.btnRoll.classList.add('hidden');
       return;
     }
 

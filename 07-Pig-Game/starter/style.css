@@ -150,11 +150,16 @@ main {
 
 .dice {
   position: absolute;
-  left: 50%;
+  left: 45%;
   top: 16.5rem;
-  transform: translateX(-50%);
   height: 10rem;
   box-shadow: 0 2rem 5rem rgba(0, 0, 0, 0.2);
+}
+
+.dice--roll {
+  -webkit-animation:spin 1s linear infinite;
+  -moz-animation:spin 1s linear infinite;
+  animation:spin 1s linear infinite;
 }
 
 .player--winner {
@@ -169,3 +174,7 @@ main {
 .hidden {
   display: none;
 }
+
+@-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
+@-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
+@keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
